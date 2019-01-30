@@ -164,6 +164,7 @@
 
   - python3 manage.py runserver：启动服务器
   - python3 manage.py createsuperuser：创建一个用户
+  - python3 manage.py migrate：同步数据库
   - 127.0.0.1:8000 访问Django后台
   - 127.0.0.1:8000/admin 访问用户后台
 
@@ -176,3 +177,14 @@
 
 =====================  下午了！我又来了！ =============================
 
+- 将Blog传到自己的git上去：就按照git的官方指导来走一点问题也没有，我是参考的这个教程 https://blog.csdn.net/css_666/article/details/78105958 
+
+  不过遇到了这个报错：git误区error: failed to push some refs to 'git@github.com:
+
+  其实就是用README.md初始化掉了哈哈哈哈哈，参考这个：https://blog.csdn.net/uotail/article/details/80211897
+
+- 按照教程上添加了两段代码用来创建Blogpost Model，分别是：
+
+  1. 在blogpost目录下的models加入了一个Blogpost类
+  2. 在admin文件中注册了这个类
+  3. 但是需要注意的是新建一个app之后需要在Blog目录下的setting文件中添加上去才可以
