@@ -188,3 +188,105 @@
   1. 在blogpost目录下的models加入了一个Blogpost类
   2. 在admin文件中注册了这个类
   3. 但是需要注意的是新建一个app之后需要在Blog目录下的setting文件中添加上去才可以
+
+
+
+
+
+============ 后面觉得这个教程太蠢了，所以换了一个，直接看官方教程了  ==============
+
+https://docs.djangoproject.com/zh-hans/2.1/intro/tutorial01/
+
+- conda uninstall django
+- pip install django==2.0.2
+- 按照这个方式修改报错：https://blog.csdn.net/qq_35304570/article/details/79674449 即可
+
+
+
+### 创建项目
+
+- django-admin startproject Blog：这样就新建了一个项目，项目的架构如下
+  - 最外层的:file: mysite/ 根目录只是你项目的容器， Django 不关心它的名字，你可以将它重命名为任何你喜欢的名字。
+  - `manage.py`: 一个让你用各种方式管理 Django 项目的命令行工具。你可以阅读 [django-admin and manage.py](https://docs.djangoproject.com/zh-hans/2.1/ref/django-admin/) 获取所有 `manage.py` 的细节。
+  - 里面一层的 `mysite/` 目录包含你的项目，它是一个纯 Python 包。它的名字就是当你引用它内部任何东西时需要用到的 Python 包名。 (比如 `mysite.urls`).
+  - `mysite/__init__.py`：一个空文件，告诉 Python 这个目录应该被认为是一个 Python 包。如果你是 Python 初学者，阅读官方文档中的 [更多关于包的知识](https://docs.python.org/3/tutorial/modules.html#tut-packages)。
+  - `mysite/settings.py`：Django 项目的配置文件。如果你想知道这个文件是如何工作的，请查看 [Django settings](https://docs.djangoproject.com/zh-hans/2.1/topics/settings/) 了解细节。
+  - `mysite/urls.py`：Django 项目的 URL 声明，就像你网站的“目录”。阅读 [URL调度器](https://docs.djangoproject.com/zh-hans/2.1/topics/http/urls/) 文档来获取更多关于 URL 的内容。
+  - `mysite/wsgi.py`：作为你的项目的运行在 WSGI 兼容的Web服务器上的入口。阅读 [如何使用 WSGI 进行部署](https://docs.djangoproject.com/zh-hans/2.1/howto/deployment/wsgi/) 了解更多细节。
+
+- python3 manage.py startapp blogpost：创建一个应用 
+- 下面的东西用来记录官方文档中的“语录”来加深理解：
+
+```
+- 在 Django 中，每一个应用都是一个 Python 包
+- 函数 include() 允许引用其它 URLconfs。每当 Django 遇到 :func：~django.urls.include 时，它会截断与此项匹配的 URL 的部分，并将剩余的字符串发送到 URLconf 以供进一步处理。(没看懂)
+- 这个 migrate 命令检查 INSTALLED_APPS 设置，为其中的每个应用创建需要的数据表，至于具体会创建什么，这取决于你的 mysite/settings.py 设置文件和每个应用的数据库迁移文件（我们稍后会介绍这个）
+- 关注一下文件头部的 INSTALLED_APPS 设置项。这里包括了会在你项目中启用的所有 Django 应用。应用能在多个项目中使用，你也可以打包并且发布应用，让别人使用它们。
+- 通过运行 makemigrations 命令，Django 会检测你对模型文件的修改（在这种情况下，你已经取得了新的），并且把修改的部分储存为一次 迁移。
+- 迁移是 Django 对于模型定义（也就是你的数据库结构）的变化的储存形式 - 没那么玄乎，它们其实也只是一些你磁盘上的文件。如果你想的话，你可以阅读一下你模型的迁移数据，它被储存在 polls/migrations/0001_initial.py 里。别担心，你不需要每次都阅读迁移文件，但是它们被设计成人类可读的形式，这是为了便于你手动修改它们。
+
+```
+
+### 创建视图
+
+- 修改blogpost/views.py，添加视图，这个的主要功能感觉是response
+- 修改blogpost/urls.py，将url关联到view上去
+- 然后在urls.py中添加blogpost应用的url
+- python3 manage.py runserver ：runserver的服务器只是用来开发的，不是用来应用的哦，他真的是一个服务器
+
+### 连接数据库
+
+- 按照上面的教程修改setting.py中的DATABASES
+- 执行 python3 manage.py migrate
+
+```
+# migrate是做什么的？
+
+这个 migrate 命令检查 INSTALLED_APPS 设置，为其中的每个应用创建需要的数据表，至于具体会创建什么，这取决于你的 mysite/settings.py 设置文件和每个应用的数据库迁移文件（我们稍后会介绍这个）。这个命令所执行的每个迁移操作都会在终端中显示出来。如果你感兴趣的话，运行你数据库的命令行工具，并输入 \dt (PostgreSQL)， SHOW TABLES; (MySQL)， .schema (SQLite)或者 SELECT TABLE_NAME FROM USER_TABLES; (Oracle) 来看看 Django 到底创建了哪些表。
+```
+
+### 创建模型
+
+- 修改blogpost/model.py 添加类
+- 修改setting.py中的INSTALLED_APP，添加新加入的model
+
+- python3 manage.py makemigrations blogpost：为模型的改变生成迁移文件。
+- python3 manage.py migrate：实现数据库迁移，也就是将刚才的模型的改变同步到数据库上
+
+```
+# 什么是迁移？
+
+通过运行 makemigrations 命令，Django 会检测你对模型文件的修改（在这种情况下，你已经取得了新的），并且把修改的部分储存为一次 迁移。
+
+迁移是 Django 对于模型定义（也就是你的数据库结构）的变化的储存形式 - 没那么玄乎，它们其实也只是一些你磁盘上的文件。如果你想的话，你可以阅读一下你模型的迁移数据，它被储存在 polls/migrations/0001_initial.py 里。别担心，你不需要每次都阅读迁移文件，但是它们被设计成人类可读的形式，这是为了便于你手动修改它们。
+```
+
+```
+# 构建模型需要几步？
+改变模型需要这三步：
+1. 编辑 models.py 文件，改变模型。
+2. 运行 python manage.py makemigrations 为模型的改变生成迁移文件。
+3. 运行 python manage.py migrate 来应用数据库迁移。
+数据库迁移被分解成生成和应用两个命令是为了让你能够在代码控制系统上提交迁移数据并使其能在多个应用里使用；这不仅仅会让开发更加简单，也给别的开发者和生产环境中的使用带来方便。
+```
+
+### 管理页面
+
+- 创建管理员账号：python3 manage.py createsuperuser
+- 加入blogpost应用：编辑blogpost/admin
+- 在这个页面中可以管理和编辑对象，这些页面都是根据你的在models.py中写的对象生成的，非常智能对吧。
+
+
+
+别忘了你有些代码还没打
+
+==============  今天到这里了，困了，明天再学  ==================
+
+==================  git push  ==============
+
+```
+Django 中的视图的概念是「一类具有相同功能和模板的网页的集合」。
+```
+
+
+
