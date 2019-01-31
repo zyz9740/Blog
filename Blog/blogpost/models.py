@@ -22,7 +22,11 @@ class Question(models.Model):
         return self.question_text
 
     def was_published_recently(self):
-        return self.pub_date >= timezone.now() - datetime.timedelta(days=1)
+        # 如果问题创建的时间在现在的时间减去一天之后，就算最近创建（有bug）
+        # return self.pub_date >= timezone.now() - datetime.timedelta(days=1)
+        # 问题创建的时间需要满足（一天之前，现在）
+        now = timezone.now()
+        return now - datetime.timedelta(days=1) <= self.pub_date <= now
 
 
 class Choice(models.Model):
