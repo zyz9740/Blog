@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <meta name="theme-color" content="#000000" />
+    <!--
+      manifest.json provides metadata used when your web app is installed on a
+      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
+    -->
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+
+    <!-- Main Style -->
+
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css">
+
+    <link href="/style.css" rel="stylesheet">
+    <!--
+      Notice the use of %PUBLIC_URL% in the tags above.
+      It will be replaced with the URL of the `public` folder during the build.
+      Only files inside the `public` folder can be referenced from the HTML.
+
+      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
+      work correctly both with client-side routing and a non-root public URL.
+      Learn how to configure a non-root public URL by running `npm run build`.
+    -->
+    <title>ME</title>
+  </head>
+  <body>
+
+  <!-- 导航栏 -->
+
+    <header id="my-header" class="my-fixed-nav">
+      <div class="container">
+        <nav class="navbar navbar-default my-navbar">
+            <div class="container-fluid">
+              <!-- Brand and toggle get grouped for better mobile display -->
+              <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false">
+                  <span class="sr-only">Toggle navigation</span>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+                  <span class="icon-bar"></span>
+                </button>
+              </div>
+              <a class="navbar-brand" href="/"><i class="fa fa-book" aria-hidden="true"></i> HugMe</a>
+              <!-- Collect the nav links, forms, and other content for toggling -->
+              <div class="collapse navbar-collapse" id="navbar">
+                  <ul class="nav navbar-nav mu-menu navbar-right">
+                    <li class='active'><a href="/#">主页</a></li>
+                    <li><a href="/#video">概览</a></li>
+                    <li><a href="/#articles">文章</a></li>
+                    <li><a href="/#register">联系我们</a></li>
+                  </ul>
+              </div><!-- /.navbar-collapse -->
+            </div><!-- /.container-fluid -->
+        </nav>
+      </div>
+    </header>
+
+    <div id='root'></div>
+
+
+<!-- footer start here -->
+<div class="footer-agile">
+  <div class="container">
+    <div class="footer-btm-agileinfo">
+      <div class="col-md-3 col-xs-3 footer-grid w3social">
+        <h3>Quick Links</h3>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="#about" class="scroll">About</a></li>
+          <li><a href="#gallery" class="scroll">Portfolio</a></li>
+          <li><a href="#contact" class="scroll">Contact Us</a></li>
+        </ul>
+      </div>
+      <div class="col-md-3 col-xs-3 footer-grid">
+        <h3>Useful Info</h3>
+        <ul>
+          <li><i class="fa fa-map-marker"></i>+012 345 6789</li>
+          <li><i class="fa fa-fax"></i>+987 654 3210</li>
+          <li><i class="fa fa-phone"></i>Kmome St, NY 10002, Canada.</li>
+          <li><i class="fa fa-envelope-o"></i><a href="mailto:example@mail.com">mail@example.com</a></li>
+        </ul>
+      </div>
+      <div class="col-md-6 col-xs-6 footer-grid footer-review">
+        <h3>Few Words</h3>
+        <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam</p>
+        <p class="w3l-para-mk">Unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam</p>
+      </div>
+      <div class="clearfix"> </div>
+    </div>
+    <div class="footer-agilem">
+      <div class="col-sm-8 col-xs-9 copy-w3lsright">
+        <p>Copyright &copy; 2017.Company name All rights reserved.More Templates <a href="http://www.cssmoban.com/" target="_blank" title="模板之家">模板之家</a> - Collect from <a href="http://www.cssmoban.com/" title="网页模板" target="_blank">网页模板</a></p>
+      </div>
+      <div class="col-sm-4 col-xs-3 social-w3licon">
+        <a href="#" class="social-button twitter"><i class="fa fa-twitter"></i></a>
+        <a href="#" class="social-button facebook"><i class="fa fa-facebook"></i></a>
+        <a href="#" class="social-button google"><i class="fa fa-google-plus"></i></a>
+        <a href="#" class="social-button dribbble"><i class="fa fa-dribbble"></i></a>
+      </div>
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</div>
+<!-- //footer end here -->
+
+  </body>
+
+  <script type="text/javascript">
+    $(document).ready(function () {
+      $('ul.nav > li ').click(function (e) {
+        e.preventDefault();
+        $('ul.nav > li').removeClass('active');
+        $(this).addClass('active');
+        console.log($(this).find('a').text());
+        switch($(this).children().text()){
+          case '主页':
+            window.location.href = '#';
+            break;
+          case '概览':
+            window.location.href = '#overview';
+            break;
+          case '文章':
+            window.location.href = '#articles';
+            break;
+          case '联系我们':
+            window.location.href = '#register';
+            break;
+          default:
+            window.location.href = '#register';
+        }
+      });
+    });
+  </script>
+</html>

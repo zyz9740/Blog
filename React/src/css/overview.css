@@ -1,0 +1,17 @@
+.overview {
+    background: #42efae;
+    padding: 3em 0;
+}
+
+.numscroller {
+    font-size: 3em;
+    font-weight: 600;
+    color: #fff;
+}
+
+.stats-agileinfo h6 {
+    letter-spacing: 3px;
+    margin: .5em 0 0;
+    font-size: 1.2em;
+    color: #fff;
+}

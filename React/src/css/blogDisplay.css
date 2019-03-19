@@ -1,0 +1,18 @@
+.blogContainer{
+    background: #ffffff;
+}
+
+.myblog{
+    background-color: #fcf8e3;
+    margin: 30px 100px 100px;
+    padding:30px 70px 70px 50px;
+}
+
+.myblog *{
+    color:black;
+}
+
+.myblog h1,h2,h3,h4,h5,h6{
+    margin: 15px 0px 15px;
+}
+

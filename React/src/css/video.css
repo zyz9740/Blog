@@ -1,0 +1,46 @@
+#video{
+    background-image: url('../img/1.png');
+    background-attachment: fixed;
+    position: relative;
+    background-size: cover;
+    width: 100%;
+}
+
+.mu-video-review-area {
+    display: inline;
+    float: left;
+    padding: 150px 0;
+    width: 100%;
+}
+
+.mu-heading-area {
+    display: inline;
+    float: left;
+    text-align: center;
+    padding: 0 10%;
+    width: 100%;
+}
+
+.mu-video-review-area .mu-heading-title{
+	margin-bottom: 25px;
+}
+
+.mu-heading-area p{
+	font-size: 17px;
+}
+
+.mu-header-dot {
+    border-radius: 0;
+    height: 3px;
+    width: 100px;
+    display: inline-block;
+    margin-bottom: 20px;
+    background-color: #fff;
+}
+
+.mu-video-review-content {
+    display: inline;
+    float: left;
+    margin-top: 70px;
+    width: 100%;
+}

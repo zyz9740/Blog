@@ -1,0 +1,82 @@
+
+
+.articles{
+    padding-top: 70px;
+    padding-bottom: 40px;
+}
+
+h3.title-w3-agile {
+    color: #000;
+    font-size: 3em;
+    letter-spacing: 1px;
+    text-align: left;
+    position: relative;
+    margin-bottom: 1em;
+    
+}
+h3.title-w3-agile:before {
+    content: "";
+    width: 59px;
+    height: 2px;
+    display: block;
+    background: #000;
+    position: absolute;
+    left: 20px;
+    bottom: -9px;
+}
+h3.title-w3-agile:after {
+    content: "";
+    width: 100px;
+    height: 2px;
+    display: block;
+    background: #ff6b6b;
+    position: absolute;
+    top: 48px;
+}
+
+.w3gallery-grids a:hover{
+    text-decoration: none;
+}
+
+.agile-figcaption {
+    background: #000;
+    text-align: center;
+    padding: 1em 0;
+	-webkit-transition: .5s all;
+	-moz-transition: .5s all; 
+    transition: .5s all; 
+}
+.agile-figcaption:hover {
+    background: #ff6b6b;
+	-webkit-transition: .5s all;
+	-moz-transition: .5s all; 
+    transition: .5s all; 
+}
+[class^='imghvr-'] > img,
+[class*=' imghvr-'] > img {
+	vertical-align: top;
+	max-width: 100%;
+	display: block;
+}
+[class^='imghvr-'] .agile-figcaption h4 {
+    font-size: 1.5em;
+    margin-bottom: .3em;
+    font-weight: 600;
+    color: #42efae;
+}
+[class^='imghvr-'] .agile-figcaption p{
+    line-height: 2em;
+    color: #fff;
+    letter-spacing: 2px;
+    margin: 0px;
+}
+[class^='imghvr-'] a,
+[class*=' imghvr-'] a {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	z-index: 1;
+}
+/*-- //gallery --*/  

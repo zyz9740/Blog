@@ -1,0 +1,93 @@
+.contact{
+	background-color: #000;
+	padding-top: 70px;
+    padding-bottom: 40px;
+}
+
+.contact h3.title-w3-agile{
+	color: #fff;
+}
+
+.contact h3.title-w3-agile:before{
+	background-color: #fff;
+}
+
+
+.contact-agileits-w3layouts{
+	background-image: url('../img/bg2.jpg');
+	padding: 2em;
+}
+
+h4.sub {
+    color: #fff;
+    letter-spacing: 1px;
+    font-size: 1.3em;
+    padding-bottom: 10px;
+}
+
+.contact-agileits-w3layouts p {
+    color: #eee;
+    font-size: 14px;
+    margin-top: 14px;
+}
+
+.contact-agileits-w3layouts input[type="text"], .contact-agileits-w3layouts input[type="email"], .contact-agileits-w3layouts textarea {
+    border: none;
+    border-bottom: 1px solid #fff;
+    padding: 10px 15px;
+    background: rgba(255, 255, 255, 0.41);
+    color: #fff;
+    letter-spacing: 1px;
+    font-size: 1em;
+    margin: 1em 0;
+    width: 100%;
+}
+
+.contact-agileits-w3layouts .name,.contact-agileits-w3layouts .email{
+	width: 50%!important;
+	border-top: 1px solid #fff!important;
+}
+
+.contact-agileits-w3layouts .email{
+	width: 50%!important;
+	border-left: 1px solid #fff!important;
+}
+
+.contact-agileits-w3layouts textarea {
+    min-height: 114px;
+    resize: none;
+}
+
+::-webkit-input-placeholder{
+	color:#fff;
+}
+
+.contact-agileits-w3layouts input[type="submit"] {
+    outline: none;
+    padding: 7px 40px;
+    background:transparent;
+    border: 1px solid #fff;
+    color: #fff;
+    font-size: 1em;
+    margin: 1em 0 0;
+    letter-spacing: 1px;
+    transition: .5s ease-in-out;
+    -webkit-transition: .5s ease-in-out;
+    -moz-transition: .5s ease-in-out;
+    -o-transition: .5s ease-in-out;
+    -ms-transition: .5s ease-in-out;
+}
+
+.contact-agileits-w3layouts input[type="submit"]:hover{
+	border-color:#ef434a;
+	transition:.5s ease-in-out;
+	-webkit-transition:.5s ease-in-out;
+	-moz-transition:.5s ease-in-out;
+	-o-transition:.5s ease-in-out;
+	-ms-transition:.5s ease-in-out;
+}
+
+.map-agileits-w3layouts iframe{
+	border: 0;
+}
+
