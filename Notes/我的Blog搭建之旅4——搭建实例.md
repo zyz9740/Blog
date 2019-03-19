@@ -1,0 +1,657 @@
+# 我的Blog搭建之旅4——搭建实例
+
+[TOC]
+
+## == 2019.2.14 ===
+
+今天的目的是融合react和Django，实现一个简单的前后端交互的小例子
+
+### Ajax
+
+- 什么是ajax：异步的JS和XML？？？
+
+```
+AJAX 是一种用于创建快速动态网页的技术。
+
+通过在后台与服务器进行少量数据交换，AJAX 可以使网页实现异步更新。这意味着可以在不重新加载整个网页的情况下，对网页的某部分进行更新。
+
+传统的网页（不使用 AJAX）如果需要更新内容，必需重载整个网页面。
+```
+
+- Ajax实例：
+
+  ```JS
+  function loadXMLDoc()
+  {
+      //创建对象
+  	var xmlhttp;
+  	xmlhttp=new XMLHttpRequest();
+      
+  	xmlhttp.onreadystatechange=function()
+  	{
+          //如果获取到了响应
+  		if (xmlhttp.readyState==4 && xmlhttp.status==200)
+  		{
+        //获取响应信息
+              document.getElementById("myDiv").innerHTML=xmlhttp.responseText;
+  		}
+  	}
+      //具体的发送请求操作，先打开后发送
+  	xmlhttp.open("GET","/try/ajax/ajax_info.txt",true);
+  	xmlhttp.send();
+  }
+  ```
+
+- 发送请求
+
+  
+
+- | 方法                             | 描述                                                         |
+  | -------------------------------- | ------------------------------------------------------------ |
+  | open(*method*,*url*,*async*)     | 规定请求的类型、URL 以及是否异步处理请求。<br />*method*：请求的类型；GET 或 POST<br />*url*：文件在服务器上的位置<br />*async*：true（异步）或 false（同步） |
+  | send(*string*)                   | 将请求发送到服务器。<br />*string*：仅用于 POST 请求         |
+  | setRequestHeader(*header,value*) | 向请求添加 HTTP 头。<br />*header*: 规定头的名称<br />*value*: 规定头的值 |
+
+- 获得响应：
+
+- | 属性         | 描述                       |
+  | ------------ | -------------------------- |
+  | responseText | 获得字符串形式的响应数据。 |
+  | responseXML  | 获得 XML 形式的响应数据。  |
+
+- readyState状态：
+
+  | 属性               | 描述                                                         |
+  | ------------------ | ------------------------------------------------------------ |
+  | onreadystatechange | 存储函数（或函数名），每当 readyState 属性改变时，就会调用该函数。 |
+  | readyState         | 存有 XMLHttpRequest 的状态。从 0 到 4 发生变化。0: 请求未初始化1: 服务器连接已建立2: 请求已接收3: 请求处理中4: 请求已完成，且响应已就绪 |
+  | status             | 200: "OK" 404: 未找到页面                                    |
+
+- 什么是异步？
+
+  - XMLHttpRequest 对象如果要用于 AJAX 的话，其 open() 方法的 async 参数必须设置为 true
+  - 通过 AJAX，JavaScript 无需等待服务器的响应，而是：
+    - 在等待服务器响应时执行其他脚本
+    - 当响应就绪后对响应进行处理
+
+### React的处理
+
+主要参考的博客是：https://www.jianshu.com/p/f59f7a7bf07d
+
+- 首先还是照常编辑一个简单的JS页面，将上面的Ajax编辑进去，利用Json传递POST请求
+
+  ```react
+  import React from 'react';
+  import ReactDOM from 'react-dom';
+  
+  class Login extends React.Component {
+    render() {
+      return (
+         <div>
+              <h2>请输入宝宝的信息</h2>
+               <form id="myDiv">
+                   姓名：<input type="text" name="name" id="name1"/><br />
+                   性别：<input type="radio"  name="sex" value="男" defaultChecked="checked" />男士
+                   <input type="radio"  name="sex" value="女"/>女士<br />
+                   年龄：<input type="text" name="age" id="age"/><br />
+                   <button type="button" onClick={this.loadXMLDoc}>提交数据</button>
+               </form>
+            </div>
+      );
+    }
+    loadXMLDoc(){
+      let xmlhttp = new XMLHttpRequest();
+      xmlhttp.onreadystatechange=function(){
+        if (xmlhttp.readyState ===4 && xmlhttp.status ===200){
+          document.getElementById("myDiv").innerHTML = xmlhttp.responseText;
+        }
+      };
+    //获取用户填写的信息
+      let name = document.getElementById("name1").value;
+      //利用querySelectorAll找到所有radionuclide，遍历其boolean从而筛选除有效的值。
+      function findsex(){
+        for (let i of document.querySelectorAll("input[type='radio']")) {
+            if (i.checked === true) {
+                return i.value
+            }
+        }
+      };
+    let sex =findsex()
+    console.log("sex:",sex);
+    let age = document.getElementById("age").value;
+  
+    //这里是封装发送
+    let jsoned = JSON.stringify({"name":name,"sex":sex,"age":age});
+    console.log("============",jsoned);
+    xmlhttp.open("POST","http://127.0.0.1:8000/server/AjaxLoad/",true);
+    xmlhttp.setRequestHeader("Content-type","application/json");
+    xmlhttp.send(jsoned);
+  }
+  }
+  
+  //=========================================================
+  ReactDOM.render(
+    <Login />,
+    document.getElementById('root')
+  );
+  ```
+
+- 我们接下来需要运行的命令是
+
+  ```shell
+  npm run build
+  ```
+
+  这个命令的作用是将你写的React打包起来可以应用，最后的目录如下：
+
+  ```shell
+  zhangyunzhedeMacBook-Air:build listener$ tree .
+  .
+  ├── asset-manifest.json
+  ├── favicon.ico
+  ├── index.html
+  ├── manifest.json
+  ├── precache-manifest.48b4d8527db511ced977333fd66c9b7a.js
+  ├── service-worker.js
+  └── static
+      └── js
+          ├── 2.c086a725.chunk.js
+          ├── 2.c086a725.chunk.js.map
+          ├── main.05eae418.chunk.js
+          ├── main.05eae418.chunk.js.map
+          ├── runtime~main.fdfcfda2.js
+          └── runtime~main.fdfcfda2.js.map
+  ```
+
+  其中这些我暂时还不知道是做什么的，但是我的React的src文件夹中其实只有一个index.js，就会build出这么多东西来，而且这个index.html是打不开的，暂时存疑。
+
+  后面我们需要使用到build文件
+
+### Django的处理
+
+对Django的处理主要是你要搞清楚创建一个项目需要的步骤，这个可以看作对之前的东西的总结吧
+
+#### < 操作步骤 >
+
+1. 创建项目：
+
+   ```shell
+   source activate Blog				#进入虚拟环境
+   django-admin startproject service	#建立项目
+   cd service
+   python3 manage.py startapp blogpost	#建立应用
+   python manage.py makemigrations	
+   python manage.py migrate
+   python manage.py runserver			#启动服务器
+   #访问8000端口
+   ```
+
+2. 增加目录：因为创建完项目之后有些需要的目录是没有的所以需要手动创建
+
+   - 在应用目录server下创建template和static分别用于储存模板文件和静态文件，将build/static中的所有文件放入static中，将build中的index.html放入templates/server/下。可是这里有几个很奇怪的点
+
+     - 在放置templates的文件的时候，我们需要建立一个server文件夹，然后将index.html放进去，这是我门在Blog1中所说的，如果不这样做的话会报错
+     - 可是在放置static的时候，不能在里面建立server文件夹用来存放js和css，必须直接存放，否则接受不到
+
+3. 配置：对项目文件夹进行配置，修改service/setting.py
+   - 在INSTALLED_APP中添加项目名‘server’
+   - 在TEMPLATES中添加templates的路径：'DIRS': [os.path.join(BASE_DIR ,'templates')]
+   - 按照之前的教程配置数据库
+   - **必须要注意的是，在你修改[ ]的时候，记得加 "," ！！！**
+
+4. url的配置：
+
+   - 修改service/setting.py：因为本来就会有一个admin，这是用来管理的。所以需要你添加你自己应用的url，加入：
+
+   ```python
+   path('server/', include('server.urls')),
+   ```
+
+   ​	用于索引到刚刚创建的urls.py
+
+   - 修改server/urls.py：这个本来就什么也没有，所以全都自己写
+
+   ```python
+   from django.urls import path
+   from . import  views
+   
+   urlpatterns = [
+       path('',views.AjaxLoad2),
+       path('AjaxLoad/',views.AjaxLoad)
+   ]
+   ```
+
+   - ！！！需要注意的是：**一定注意到这个/，你自己添加的一定要有这个/，否则会404**
+
+   - 这里的AjaxLoad是需要对应上面的index.js中的发送的路径：
+
+     ```react
+       xmlhttp.open("POST","http://127.0.0.1:8000/server/AjaxLoad/",true);
+     ```
+
+5. 添加views.py
+
+   ```python
+   from django.shortcuts import render
+   import json
+   from django.http import HttpResponse
+   
+   # Create your views here.
+   
+   
+   def AjaxLoad2(request):
+       if request.method == "GET":
+           return render(request, "server/index.html")
+   
+   def AjaxLoad(request):
+       if request.method == "POST":
+           if request.body == "":
+               return HttpResponse("请您填写有效信息！")
+           else:
+               receive_bytes = request.body
+               receive_str = bytes.decode(receive_bytes)
+               receive_obj = json.loads(receive_str)
+               print("~~~~~~>", type(receive_obj),receive_obj)
+               name = receive_obj["name"]
+               sex = receive_obj["sex"]
+               age = receive_obj["age"]
+               print("#####name",name)
+               return HttpResponse("你好！"+name+","+age+"岁的"+sex+"宝宝！")
+   ```
+
+6. 访问http://localhost:8000/server/即可
+
+### 跨域访问
+
+这样子是可以显示出来了
+
+![image-20190214170027168](https://ws3.sinaimg.cn/large/006tKfTcgy1g0625wk6r2j309f054748.jpg)
+
+可是问题是不能提交，就是不能进行React与Django的交互，利用Chrome的检查报错如下：
+
+```
+index.js:45 OPTIONS http://127.0.0.1:8000/server/AjaxLoad/ 404 (Not Found)
+(index):1 Access to XMLHttpRequest at 'http://127.0.0.1:8000/server/AjaxLoad/' from origin 'http://localhost:8000' has been blocked by CORS policy: Response to preflight request doesn't pass access control check: No 'Access-Control-Allow-Origin' header is present on the requested resource.
+```
+
+此处参考博客：https://www.jianshu.com/p/8f43ad5482f4 解决了跨域访问问题
+
+- 当 Web 资源请求由其它域名或端口提供的资源时，会发起跨域 HTTP 请求（cross-origin HTTP request）。
+  比如，站点 http://domain-a.com 的某 HTML 页面通过 <img> 的 src 请求 http://domain-b.com/image.jpg。网络上，很多页面从其他站点加载各类资源（包括 CSS、图片、JavaScript 脚本）。
+  出于安全考虑，浏览器会限制脚本中发起的跨域请求。比如，使用 XMLHttpRequest 和 Fetch 发起的 HTTP 请求必须遵循同源策略。因此，Web 应用通过 XMLHttpRequest 对象或 Fetch 仅能向同域资源发起 HTTP 请求。 
+
+这样子一个React + Ajax + Django的例子就完成了
+
+## == 2019.2.15 ==
+
+### Ngnix
+
+参见博客：https://www.cnblogs.com/wcwnina/p/8728391.html
+
+### React + Django + Pycharm
+
+参照博客 https://www.jianshu.com/p/aeb02c8e56d5 ，写了一个自动化的脚本用于联合编写React和Django的程序
+
+```shell
+BASE_DIR=$HOME/Desktop/MyBlog
+  
+react_kit_dir=$BASE_DIR/React/src		#存放react源码用于编译的目录
+django_pro_dir=$BASE_DIR/service/server	#django的工作目录
+pro_name=server							
+
+dist_dir=$BASE_DIR/React/build			#build完之后的react编译结果目录
+
+cp -rf $django_pro_dir/React/* $react_kit_dir/	#首先拷贝编写的源码到React源码中等待编译
+
+cd $react_kit_dir/
+npm run build
+
+cp -f $dist_dir/*html  $django_pro_dir/templates/$pro_name	#将编译完成的html放到templates中
+cp -rf $dist_dir/static/*  $django_pro_dir/static/$pro_name	#将静态文件放入static中
+
+```
+
+
+
+
+
+真正开始写自己的网站了！我首先是下了一个比较好看的网页，然后再对着他的架构大概搭建自己的架构了！
+
+http://demo.cssmoban.com/cssthemes5/cpts_1638_dlq/index.html
+
+## 前端部分
+
+```
+Parsing error: Adjacent JSX elements must be wrapped in an enclosing tag. Did you want a JSX fragment <>...</>?
+```
+
+JSX要求必须是 **一个** **封闭的** 元素才行，我一开始咩有注意到 **一个** 这个问题，加一个div就好啦
+
+
+
+- React的元素必须要大写字母开头
+- 上边有空白行我把float：left去掉就好了
+
+### 架构
+
+首先说一下项目的架构：
+
+- 采用React的项目组织方式，**index.html**放置在**public**文件夹中，总的CSS文件取名为**style.css**也放置在**public**文件夹中。图标和配置文件等也放在那里。
+
+- 在src中放置：**index.js index.css js css img video**等资源文件
+
+```
+  React
+   |- public
+   |    ├── favicon.ico
+   |    ├── index.html
+   |    ├── manifest.json
+   |    └── style.css
+   |- src
+        ├── css
+        │   ├── articles.css
+        │   ├── carousel.css
+        │   ├── overview.css
+        │   ├── register.css
+        │   └── video.css
+        ├── img
+        │   ├── 1.png
+        │   ├── ...
+        │   └── other.JPG
+        ├── index.css
+        ├── index.js
+        ├── js
+        │   ├── Main.js
+        │   ├── articles.js
+        │   ├── carousel.js
+        │   ├── overview.js
+        │   ├── register.js
+        │   └── video.js
+        └── video
+
+
+```
+
+
+
+### 导航栏的设计
+
+导航栏直接使用了Bootstrap的设计，在style.css中修改样式就好了-
+
+#### \< 慢速动画 >
+
+添加动画的实现是使用hover元素和transition属性一起进行的，hover负责描述最终的变换状态，transition可以表示变化属性、持续时间、动画效果、延迟
+
+http://www.runoob.com/cssref/css3-pr-transition.html
+
+| 值                           | 描述                                                         |
+| ---------------------------- | ------------------------------------------------------------ |
+| *transition-property*        | 指定CSS属性的name，transition效果 none/all/property          |
+| *transition-duration*        | transition效果需要指定多少秒或毫秒才能完成                   |
+| *transition-timing-function* | 指定transition效果的转速曲线 linear/ease/ease-in/ease-out/ease-in-out |
+| *transition-delay*           | 定义transition效果开始的时候                                 |
+
+#### < 页内跳转与active >
+
+- 页内跳转直接使用**href=#(id)**即可，括号中填的是对应类的id
+
+- 对应active的设计是需要一段JS代码的：
+
+  ```html
+  <script type="text/javascript">
+      $(document).ready(function () {
+        $('ul.nav > li').click(function (e) {
+          e.preventDefault();
+          $('ul.nav > li').removeClass('active');
+          $(this).addClass('active');
+        });
+      });
+    </script>
+  ```
+
+- 对应的active的动画设计就是要看你与bootstrap的优先级的抗衡了
+- 出现的问题：
+
+#### < onClick与href的冲突 >
+
+- 在设计导航栏的时候，希望通过jQuery进行active的改变以及通过href进行页面跳转，但是click和href是两个冲突的行为不能同时使用。所以希望在JS中添加动作以完成active的改变和页面跳转同时进行，代码修改如下：
+  - 需要注意的是**this**的意义，这里的this本来指的是**li**这个组件，所以获取不到text，应该改成他的字元素**a**才可以跳转成功。
+
+```html
+<script type="text/javascript">
+    $(document).ready(function () {
+      $('ul.nav > li ').click(function (e) {
+        e.preventDefault();
+        $('ul.nav > li').removeClass('active');
+        $(this).addClass('active');
+        switch(this.children().text()){
+          case '主页':
+            window.location.href = '#';
+            break;
+          case '概览':
+            window.location.href = '#overview';
+            break;
+          case '文章':
+            window.location.href = '#articles';
+            break;
+          case '联系我们':
+            window.location.href = '#register';
+            break;
+          default:
+            window.location.href = '#register';
+        }
+      });
+    });
+  </script>
+```
+
+#### < style.css 与 bootstrap的抗衡 —— CSS中的优先级 >
+
+- 首先如果对与同等的元素，因为我们的CSS比bootstrap添加的考后，所以他的优先级高一些。
+- 但是他因为有active、focus、hover时的更加精细的描述，所以有时他的优先级会高。所以需要添加额外的属性或者使用！important属性
+
+优先级：
+
+
+
+### 轮播图片的设计
+
+## 后端设计
+
+在后端的设计采用的是
+
+### 访客信息
+
+遇到的一个问题：我设计了一个accessControl的model来表示访客的信息，然后出现了一个问题。我想修改这个数据库的时候，出现了这样一的一个报错：
+
+```
+ Applying server.0009_auto_20190305_1628...Traceback (most recent call last):
+  File "manage.py", line 22, in <module>
+    execute_from_command_line(sys.argv)
+	...
+    match = datetime_re.match(value)
+TypeError: expected string or bytes-like object
+
+```
+
+我本来以为是datetime的问题，因为我在default的过程中把datetime的default设计为0了，不符合datetime的要求。所以我索性 **直接删除了这个数据库**，然后在models中去除了这个model。然后仍然报上面这个错，我就非常不解了。
+
+我现在已经migration到0014号了，就算manage.py service 0014 也是这个错误
+
+后来认真看看了报错，这个错还是针对0009 执行的！所以我知道了，应该是在数据库中migrate只执行到migration0008 ，0009一直报错，所以就算你指定0014也会先执行未执行的0009。于是我直接修改了0009的migration，然后吧default修改掉就好了！
+
+#### < 获取访客信息 >
+
+真的是，在这里卡了好久，先放上最终的解决方法吧：
+
+```python
+def visitorAccess(request):
+    if 'HTTP_X_FORWARDED_FOR' in request.META:  # 获取ip
+        client_ip = request.META['HTTP_X_FORWARDED_FOR']
+        client_ip = client_ip.split(",")[0]  # 所以这里是真实的ip
+    else:
+        client_ip = request.META['REMOTE_ADDR']  # 这里获得代理ip
+        
+	# 这个是构造一个返回的值
+    responseData = {}
+    count_nums = AccessNumber.objects.filter(id=1)
+    if count_nums:
+        count_nums = count_nums[0]
+        count_nums.count += 1
+        responseData['visitorsCount'] = count_nums.count
+    else:
+        count_nums = AccessNumber()
+        count_nums.count = 1
+    count_nums.save()
+	
+    # 储存时间与IP
+    from django.utils import timezone  # 引入timezone模块
+    visitDate = timezone.now()  # 输出time_now即为当然日期和时间
+    visit = AccessControl(date=visitDate, ip_address=client_ip)
+    visit.save()
+    return responseData
+
+
+class AccessList(generics.ListCreateAPIView):
+    queryset = AccessControl.objects.all()
+    serializer_class = AccessControlSerializer
+
+    def create(self, request, *args, **kwargs):
+        data = visitorAccess(request)
+        return Response(data, status=status.HTTP_201_CREATED)
+```
+
+Response的参数只要是dict就行了，serializer.data的类型也是dict，所以我们构造一个dict作为返回值。
+
+因为用的是generics的APIView接口，所以需要自己去函数定义的地方去找需要重载哪一个函数，我是自己定义了一个函数直接放在post里面了。这里最终进行储存的函数是create函数，所以我们只需要重载create函数即可。
+
+前端的交互仍然使用fetch方法：
+
+```react
+fetch('http://localhost:8000/server/access/',{
+			headers: {
+				"Content-Type": "application/json" 
+        	},
+        	method: 'POST',
+        	body:  ""
+		})
+		.then(response => response.json())
+		.then(parsedJSON => {
+			this.setState({
+				visitorscount:parsedJSON.visitorsCount
+			})
+		})
+		.catch(e => console.log('Failed to get visitorsCount', e))
+```
+
+#### < Django中时间赋值报错 >
+
+```
+/Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/django/db/models/fields/__init__.py:1423: RuntimeWarning: DateTimeField Grades.gdate received a naive datetime (2017-06-12 00:00:00) while time zone support is active.
+```
+
+解决办法:
+
+- settings中USE_TZ设置为False
+
+- 时区信息：TIME_ZONE = 'Asia/Shanghai'
+
+```
+LANGUAGE_CODE = 'zh-Hans'
+
+TIME_ZONE = 'Asia/Shanghai'
+
+USE_I18N = True
+
+USE_L10N = True
+
+USE_TZ = False
+```
+
+### 博客界面
+
+#### < 页面位置 >
+
+- 其实我本来想探究一下能不能访问另一个html页面，可是最后没有找到有效结果，所以希望以后认真学一下React吧
+- 所以最后是在一个原来的页面上重新渲染了一个组件吧，这里遇到了一些问题：
+
+就是我在React页面加载的过程中发现原来的css样式失效了，最后发现是因为路径设置的问题，我默认访问了本文件夹下的一个路径，导致在使用/blogs/1路径的时候没有这个css样式表，最后吧style.css改为/style.css才完成了 这个工作。
+
+#### < 博客展示 >
+
+我的思路是这样子的，我首先写好我的markdown格式的博客，把它作为信息传递到前端，然后前端使用npm的一个插件“showdown”将markdown格式转换为html格式。
+
+可是问题还是出在路径上面  React的路径和Django的路径我都不怎么懂诶，最后导致文件无法打开，自然就无法传输咯
+
+最后决定吧博客放在数据库里面吧，然后按照与其他页面相同的方式请求即可。下面就说一下在修改数据库和修改view时遇到的问题：
+
+有时候我们修改数据库的时候，因为数据库里面已经存在一些数据了，要修改列的属性会出现一些问题。此时的解决方式有俩个：
+
+1. 直接去修改migration文件，把不行的地方修改为自己需要的
+2. 直接去修改数据库就行了，然后修改model
+
+
+
+#### < 自定义view时候的报错 >
+
+1. many=True
+
+1. ```
+   The serializer field might be named incorrectly and not match any attribute or key on the `QuerySet` instance.
+   Original exception text was: 'QuerySet' object has no attribute 'title'.
+   ```
+
+   其实这是可以看懂的，serializer不希望你给他一个Queryset数据结构的变量，所以我们需要吧serializer的many变量改为True以保证可以序列化多个对象。
+
+   ```
+   responseData = BlogInfoSerializer(targetBlog,many=True)
+   ```
+
+2. 底层的东西我们好好用，别用封装的了。这一次是因为底层的问题出的错
+
+   我原来感觉自己定义的挺好的：
+
+   ```
+   def blogDetail(request,blog_id):
+       blogs = BlogInfo.objects.all()
+       targetBlog = blogs.filter(id=blog_id)
+       responseData = BlogInfoSerializer(targetBlog,many=True)
+       return Response(responseData.data)
+   ```
+
+   结果出来报错了
+
+   ```
+   “.accepted_renderer not set on Response resp api django"
+   ```
+
+   上网一查发现是这个原因：https://www.e-learn.cn/content/wangluowenzhang/169689
+
+   然后才知道修改代码要变成这样子才行
+
+   ```
+   from rest_framework.decorators import api_view
+   
+   @api_view(['GET'])
+   def blogDetail(request,blog_id):
+       if request.method == 'GET':
+           blogs = BlogInfo.objects.all()
+           targetBlog = blogs.filter(id=blog_id)
+           responseData = BlogInfoSerializer(targetBlog,many=True)
+           return Response(responseData.data)
+   
+   ```
+
+   我这里不用类的原因是我不知道怎么用类来接受多个参数，还是自己比较菜吧hhh，以后都用函数算了，记得：
+
+   - 加装饰器
+
+   - 加method的判断
+
+   3、JsonResponse
+
+   ```
+   In order to allow non-dict objects to be serialized set the safe parameter to False.
+   ```
+
+   
